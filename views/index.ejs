@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+
+<body>
+    <header>
+        <h1>Welcome to the Water Meter App</h1>
+        <nav>
+            <ul>
+                <% if (user) { %>
+                    <li><a href="/profile">Profile</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                    <% } else { %>
+                        <li><a href="/auth/login">Login</a></li>
+                        <li><a href="/register">Register</a></li>
+                        <p>Already have an account? <a href="/auth/login">Login here</a>.</p>
+                        <% } %>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <p>Manage your water usage effortlessly!</p>
+    </main>
+    <footer>
+        <p>&copy; 2025 Water Meter App</p>
+    </footer>
+</body>
+
+</html>
