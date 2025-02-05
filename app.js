@@ -42,9 +42,9 @@ app.use(flash());
 
 // Global Variables for Flash Messages
 app.use((req, res, next) => {
-    res.locals.success_msg = req.flash('success_msg');
-    res.locals.error_msg = req.flash('error_msg');
-    res.locals.error = req.flash('error');
+    res.locals.success_msg = req.flash('success_msg') || [];
+    res.locals.error_msg = req.flash('error_msg') || [];
+    res.locals.error = req.flash('error') || [];
     next();
 });
 
@@ -52,6 +52,8 @@ app.use((req, res, next) => {
 app.use('/', require('./routes/index'));
 app.use('/auth', require('./routes/auth'));
 app.use('/profile', require('./routes/profile'));
+app.use('/watermeter', require('./routes/watermeter'));
+
 
 
 

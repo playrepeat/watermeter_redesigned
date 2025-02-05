@@ -6,69 +6,185 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
     <link rel="stylesheet" href="/styles/style.css">
+
 </head>
 
 <body>
-    <header>
-        <h1>Welcome, <%= user.firstName %>!</h1>
-        <nav>
-            <a href="/" class="nav-link">Home</a>
-            <a href="/" class="nav-link">Logout</a>
-        </nav>
-    </header>
-
-    <main class="profile-container">
-        <!-- Account Details Section -->
-        <section class="profile-section">
-            <h2>Account Details</h2>
-            <p><strong>Name:</strong>
-                <%= user.firstName %>
-                    <%= user.lastName %>
-            </p>
-            <p><strong>Email:</strong>
-                <%= user.email %>
-            </p>
-            <p><strong>Apartment:</strong>
-                <%= user.apartment %>
-            </p>
-        </section>
-
-        <!-- Change Password Section -->
-        <section class="profile-section">
-            <h2>Change Password</h2>
-            <form id="changePasswordForm">
-                <label for="oldPassword">Old Password:</label>
-                <input type="password" id="oldPassword" name="oldPassword" required>
-
-                <label for="newPassword">New Password:</label>
-                <input type="password" id="newPassword" name="newPassword" required>
-
-                <button type="submit">Update Password</button>
-            </form>
-        </section>
-
-        <!-- Record Water Meter Section -->
-        <section class="profile-section">
-            <h2>Record New Water Meter</h2>
-            <form id="recordUsageForm">
-                <label for="waterUsage">Water Usage (in cubic meters):</label>
-                <input type="number" id="waterUsage" name="waterUsage" min="0.01" step="0.01" required>
-
-                <label for="notes">Notes (Optional):</label>
-                <textarea id="notes" name="notes" rows="4" placeholder="Add any additional details..."></textarea>
-
-                <button type="submit">Submit</button>
-            </form>
-        </section>
-
-        <!-- View Previous Recordings Section -->
-        <section class="profile-section">
-            <h2>Previous Water Meter Recordings</h2>
-            <div id="recordsContainer">
-                <!-- Records will be dynamically loaded here -->
-            </div>
-        </section>
-    </main>
+    <% if (success_msg.length> 0) { %>
+        <div class="flash-message success">
+            <%= success_msg %>
+        </div>
+        <% } %>
+            <% if (error_msg.length> 0) { %>
+                <div class="flash-message error">
+                    <%= error_msg %>
+                </div>
+                <% } %>
 
 
+                    <header>
+                        <h1>Welcome, <%= user.firstName %>!</h1>
+                        <nav>
+                            <a href="/" class="nav-link">Home</a>
+                            <a href="/auth/logout" class="nav-link">Logout</a>
+                        </nav>
+                    </header>
+
+                    <main class="profile-container">
+                        <!-- Account Details Section -->
+                        <section class="profile-section">
+                            <h2>Your Account</h2>
+                            <p><strong>Name:</strong>
+                                <%= user.firstName %>
+                                    <%= user.lastName %>
+                            </p>
+                            <p><strong>Email:</strong>
+                                <%= user.email %>
+                            </p>
+                            <p><strong>Apartment:</strong>
+                                <%= user.apartment %>
+                            </p>
+                        </section>
+
+                        <!-- Navigation Links -->
+                        <section class="profile-section">
+                            <h2>Actions</h2>
+                            <ul class="action-links">
+                                <li><a href="#" id="openChangePasswordModal" class="action-link">Change Password</a>
+                                </li>
+                                <li><a href="#" id="openRecordReadingModal" class="action-link">Record Water Reading</a>
+                                </li>
+                                <li><a href="#" class="action-link">View Previous Readings</a></li>
+                            </ul>
+                        </section>
+                    </main>
+
+                    <!-- Password Change Modal -->
+                    <div id="changePasswordModal" class="modal" style="display: none;">
+                        <div class="modal-content">
+                            <span id="closeChangePasswordModal" class="close">&times;</span>
+                            <h2>Change Password</h2>
+                            <form id="changePasswordForm" method="POST" action="/profile/change-password">
+                                <label for="oldPassword">Old Password:</label>
+                                <input type="password" id="oldPassword" name="oldPassword" required>
+
+                                <label for="newPassword">New Password:</label>
+                                <input type="password" id="newPassword" name="newPassword" required>
+
+                                <label for="confirmPassword">Confirm New Password:</label>
+                                <input type="password" id="confirmPassword" name="confirmPassword" required>
+
+                                <button type="submit">Update Password</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Record Water Reading Modal -->
+                    <div id="recordReadingModal" class="modal" style="display: none;">
+                        <div class="modal-content">
+                            <span id="closeRecordReadingModal" class="close">&times;</span>
+                            <h2>Record reading</h2>
+                            <form id="recordReadingForm" method="POST" action="/profile/record-reading">
+                                <label for="newReading">New reading:</label>
+                                <input type="number" id="newReading" name="newReading" required>
+
+                                <button type="submit">Record Reading</button>
+
+                            </form>
+                        </div>
+                    </div>
+
+                    <script>
+                        // Modal logic for change password
+                        const modal1 = document.getElementById('changePasswordModal');
+                        const openModalBtn1 = document.getElementById('openChangePasswordModal');
+                        const closeModalBtn1 = document.getElementById('closeChangePasswordModal');
+
+                        openModalBtn1.addEventListener('click', () => {
+                            modal1.style.display = 'block';
+                        });
+
+                        closeModalBtn1.addEventListener('click', () => {
+                            modal1.style.display = 'none';
+                        });
+
+                        window.addEventListener('click', (e) => {
+                            if (e.target === modal1) {
+                                modal1.style.display = 'none';
+                            }
+                        });
+
+                        // Modal logic for record reading
+                        const modal2 = document.getElementById('recordReadingModal');
+                        const openModalBtn2 = document.getElementById('openRecordReadingModal');
+                        const closeModalBtn2 = document.getElementById('closeRecordReadingModal');
+
+                        openModalBtn2.addEventListener('click', () => {
+                            modal2.style.display = 'block';
+                        });
+
+                        closeModalBtn2.addEventListener('click', () => {
+                            modal2.style.display = 'none';
+                        });
+
+                        window.addEventListener('click', (e) => {
+                            if (e.target === modal2) {
+                                modal2.style.display = 'none';
+                            }
+                        });
+                    </script>
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function () {
+                            setTimeout(() => {
+                                document.querySelectorAll('.flash-message').forEach(msg => {
+                                    msg.style.display = 'none';
+                                });
+                            }, 5000); // Hides the message after 5 seconds
+                        });
+                    </script>
+
+
+                    <style>
+                        /* Modal Styles */
+                        .modal {
+                            position: fixed;
+                            top: 0;
+                            left: 0;
+                            width: 100%;
+                            height: 100%;
+                            background-color: rgba(0, 0, 0, 0.5);
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                        }
+
+                        .modal-content {
+                            background: #fff;
+                            padding: 20px;
+                            border-radius: 8px;
+                            width: 90%;
+                            max-width: 400px;
+                            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                            position: relative;
+                        }
+
+                        .close {
+                            position: absolute;
+                            top: 10px;
+                            right: 10px;
+                            font-size: 20px;
+                            cursor: pointer;
+                        }
+
+                        .profile-container {
+                            max-width: 800px;
+                            margin: 0 auto;
+                        }
+
+                        .profile-section {
+                            margin-bottom: 20px;
+                        }
+                    </style>
 </body>
+
+</html>

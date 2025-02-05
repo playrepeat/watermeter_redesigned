@@ -1,15 +1,10 @@
 const express = require('express');
-const User = require('../models/User');
 const router = express.Router();
-const flash = require('connect-flash');
+const ensureAuthenticated = require('../middleware/ensureAuthenticated');
+const User = require('../models/User');
+const bcrypt = require('bcryptjs');
 
-// Middleware to ensure authentication
-function ensureAuthenticated(req, res, next) {
-    if (req.isAuthenticated && req.isAuthenticated()) {
-        return next();
-    }
-    res.redirect('/auth/login'); // Redirect to login if not authenticated
-}
+
 
 // Profile page route
 router.get('/', ensureAuthenticated, (req, res) => {
@@ -17,16 +12,50 @@ router.get('/', ensureAuthenticated, (req, res) => {
 });
 
 
-// Logout Route
-router.get('/logout', (req, res) => {
-    req.logout(err => {
-        if (err) {
-            console.error(err);
+router.get('/change-password', ensureAuthenticated, (req, res) => {
+    res.render('change-password', { title: 'Change Password' });
+});
+
+router.get('/record-reading', ensureAuthenticated, (req, res) => {
+    res.render('record-reading', { title: 'Record Water Reading' });
+});
+
+router.get('/previous-readings', ensureAuthenticated, async (req, res) => {
+    const records = await WaterRecord.getRecordsByUserId(req.user.id);
+    res.render('previous-readings', { title: 'Previous Readings', records });
+});
+
+router.post('/change-password', ensureAuthenticated, async (req, res) => {
+    const { oldPassword, newPassword } = req.body;
+
+    try {
+        const userPassword = await User.findPasswordDetailsByUserId(req.user.id);
+
+        if (!userPassword || userPassword.is_locked) {
+            req.flash('error_msg', 'Your account is locked or password record not found.');
             return res.redirect('/profile');
         }
-        req.flash('success_msg', 'You are logged out');
-        res.redirect('/login');
-    });
+
+        const isMatch = await bcrypt.compare(oldPassword, userPassword.hashed_password);
+        if (!isMatch) {
+            req.flash('error_msg', 'Incorrect old password.');
+            return res.redirect('/profile');
+        }
+
+        // Hash new password and update the database
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        await User.updatePassword(req.user.id, hashedPassword);
+
+        req.flash('success_msg', 'Password changed successfully!');
+        return res.redirect('/profile');
+
+    } catch (error) {
+        console.error('Error changing password:', error);
+        req.flash('error_msg', 'An error occurred while changing the password.');
+        return res.redirect('/profile');
+    }
 });
+
+
 
 module.exports = router;

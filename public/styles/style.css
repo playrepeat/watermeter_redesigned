@@ -123,3 +123,22 @@ table tr:nth-child(even) {
 table tr:hover {
     background-color: #eaf3ff;
 }
+
+/* Flash Styles */
+
+.flash-message {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.flash-message.success {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.flash-message.error {
+    background-color: #f44336;
+    color: white;
+}
