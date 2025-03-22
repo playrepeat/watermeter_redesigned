@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { ensureAdmin } = require('../middlewares/auth'); // Middleware for admin access
+const { ensureAuthenticated, ensureAdmin } = require('../middleware/auth');
+
 
 // Admin Dashboard Page
 router.get('/dashboard', ensureAdmin, (req, res) => {

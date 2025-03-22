@@ -11,23 +11,18 @@
 </head>
 
 <body>
-    <% if (success_msg) { %>
-        <div class="alert alert-success">
+    <% if (success_msg.length> 0) { %>
+        <div class="flash-message success">
             <%= success_msg %>
         </div>
-    <% } %>
+        <% } %>
+            <% if (error_msg.length> 0) { %>
+                <div class="flash-message error">
+                    <%= error_msg %>
+                </div>
+                <% } %>
 
-    <% if (error_msg) { %>
-        <div class="alert alert-danger">
-            <%= error_msg %>
-        </div>
-    <% } %>
 
-    <% if (error) { %>
-        <div class="alert alert-warning">
-            <%= error %>
-        </div>
-    <% } %>
     <header>
         <h1>Register</h1>
     </header>

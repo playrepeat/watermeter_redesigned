@@ -5,10 +5,34 @@ const flash = require('connect-flash');
 const passport = require('passport');
 require('dotenv').config();
 require('./config/passport')(passport); // Passport config
-
-
-
 const app = express();
+
+// Express Session
+app.use(
+    session({
+        secret: process.env.SECRET_KEY,
+        resave: false,
+        saveUninitialized: false,
+        cookie: { secure: false }
+    })
+);
+
+// Passport Middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Flash Middleware
+app.use(flash());
+
+// Global Variables for Flash Messages
+app.use((req, res, next) => {
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    res.locals.error = req.flash('error'); // Passport sets its own error messages
+    next();
+});
+
+
 
 // Middleware
 app.use(express.urlencoded({ extended: false }));
@@ -22,33 +46,6 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Middleware for serving static files
 app.use(express.static(path.join(__dirname, 'public')));
-
-
-// Express Session
-app.use(
-    session({
-        secret: process.env.SECRET_KEY,
-        resave: false,
-        saveUninitialized: false,
-        cookie: { secure: false }
-    })
-);
-
-// Flash Middleware
-app.use(flash());
-
-// Global Variables for Flash Messages
-app.use((req, res, next) => {
-    res.locals.success_msg = req.flash('success_msg');
-    res.locals.error_msg = req.flash('error_msg');
-    res.locals.error = req.flash('error');
-    next();
-});
-
-
-// Passport Middleware
-app.use(passport.initialize());
-app.use(passport.session());
 
 
 
