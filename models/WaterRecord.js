@@ -36,6 +36,7 @@ class WaterRecord {
         return result.rows[0];
     }
 
+
     // Delete a water record
     static async deleteRecord(recordId) {
         const query = `

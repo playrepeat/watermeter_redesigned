@@ -11,11 +11,28 @@
 </head>
 
 <body>
+    <% if (success_msg) { %>
+        <div class="alert alert-success">
+            <%= success_msg %>
+        </div>
+    <% } %>
+
+    <% if (error_msg) { %>
+        <div class="alert alert-danger">
+            <%= error_msg %>
+        </div>
+    <% } %>
+
+    <% if (error) { %>
+        <div class="alert alert-warning">
+            <%= error %>
+        </div>
+    <% } %>
     <header>
         <h1>Register</h1>
     </header>
     <main>
-        <form action="/register" method="POST">
+        <form action="/auth/register" method="POST">
             <label for="firstName">First Name:</label>
             <input type="text" id="firstName" name="firstName" required>
 
@@ -25,12 +42,15 @@
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" required>
 
+            <label for="apartment">Apartment number:</label>
+            <input type="text" id="apartment" name="apartment" required>
+
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
 
             <button type="submit">Register</button>
         </form>
-        <p>Already have an account? <a href="/login">Login here</a>.</p>
+        <p>Already have an account? <a href="/auth/login">Login here</a>.</p>
     </main>
 </body>
 

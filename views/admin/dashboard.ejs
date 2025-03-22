@@ -1,0 +1,36 @@
+<%- include('../partials/header') %>
+
+<h2>Admin Dashboard</h2>
+
+<% if (messages.success_msg) { %>
+    <div class="alert alert-success"><%= messages.success_msg %></div>
+<% } %>
+
+<% if (messages.error_msg) { %>
+    <div class="alert alert-danger"><%= messages.error_msg %></div>
+<% } %>
+
+<table>
+    <tr>
+        <th>Email</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Apartment</th>
+        <th>Action</th>
+    </tr>
+    <% users.forEach(user => { %>
+        <tr>
+            <td><%= user.email %></td>
+            <td><%= user.first_name %></td>
+            <td><%= user.last_name %></td>
+            <td><%= user.apartment %></td>
+            <td>
+                <form action="/admin/approve/<%= user.id %>" method="POST">
+                    <button type="submit">Approve</button>
+                </form>
+            </td>
+        </tr>
+    <% }) %>
+</table>
+
+<%- include('../partials/footer') %>

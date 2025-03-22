@@ -54,7 +54,7 @@
                                 </li>
                                 <li><a href="#" id="openRecordReadingModal" class="action-link">Record Water Reading</a>
                                 </li>
-                                <li><a href="#" class="action-link">View Previous Readings</a></li>
+                                <li><a href="#" class="openReadingsModal">View Previous Readings</a></li>
                             </ul>
                         </section>
                     </main>
@@ -85,8 +85,12 @@
                             <span id="closeRecordReadingModal" class="close">&times;</span>
                             <h2>Record reading</h2>
                             <form id="recordReadingForm" method="POST" action="/profile/record-reading">
-                                <label for="newReading">New reading:</label>
-                                <input type="number" id="newReading" name="newReading" required>
+                                <label for="waterUsage">New reading:</label>
+                                <input type="number" id="waterUsage" name="waterUsage" required>
+                                <label for="notes">Notes (Optional):</label>
+                                <textarea id="notes" name="notes" rows="3"
+                                    placeholder="Add any additional details..."></textarea>
+
 
                                 <button type="submit">Record Reading</button>
 
@@ -94,6 +98,50 @@
                         </div>
                     </div>
 
+
+                    <!-- The Modal -->
+                    <div id="readingsModal" class="modal" style="display: none;">
+                        <div class="modal-content">
+                            <span class="close" id="closeReadingsModal">&times;</span>
+                            <h2>Previous Water Meter Readings</h2>
+                            <div id="readingsContainer">Loading...</div> <!-- Placeholder -->
+                        </div>
+                    </div>
+
+                    <!-- JavaScript to Handle Modal Opening -->
+                    <script>
+                        document.querySelector('.openReadingsModal').addEventListener('click', async function (event) {
+                            event.preventDefault(); // Prevent page reload
+
+                            // Open the modal
+                            document.getElementById('readingsModal').style.display = 'block';
+
+                            // Fetch readings from the server
+                            const response = await fetch('/profile/previous-readings');
+                            const readings = await response.json();
+
+                            // Display readings in the modal
+                            const container = document.getElementById('readingsContainer');
+                            container.innerHTML = ''; // Clear previous data
+
+                            if (readings.length > 0) {
+                                readings.forEach(reading => {
+                                    const readingItem = document.createElement('p');
+                                    readingItem.innerHTML = `<strong>Date:</strong> ${new Date(reading.reading_date).toISOString().slice(0, 10)}
+                                                             <strong>Usage:</strong> ${reading.water_usage} m³
+                                                             ${reading.notes ? ` - ${reading.notes}` : ''}`;
+                                    container.appendChild(readingItem);
+                                });
+                            } else {
+                                container.innerHTML = '<p>No previous readings found.</p>';
+                            }
+                        });
+
+                        // Close the modal
+                        document.getElementById('closeReadingsModal').addEventListener('click', function () {
+                            document.getElementById('readingsModal').style.display = 'none';
+                        });
+                    </script>
                     <script>
                         // Modal logic for change password
                         const modal1 = document.getElementById('changePasswordModal');
@@ -142,6 +190,13 @@
                             }, 5000); // Hides the message after 5 seconds
                         });
                     </script>
+
+
+
+
+
+
+
 
 
                     <style>

@@ -30,29 +30,36 @@ app.use(
         secret: process.env.SECRET_KEY,
         resave: false,
         saveUninitialized: false,
+        cookie: { secure: false }
     })
 );
-
-// Passport Middleware
-app.use(passport.initialize());
-app.use(passport.session());
 
 // Flash Middleware
 app.use(flash());
 
 // Global Variables for Flash Messages
 app.use((req, res, next) => {
-    res.locals.success_msg = req.flash('success_msg') || [];
-    res.locals.error_msg = req.flash('error_msg') || [];
-    res.locals.error = req.flash('error') || [];
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    res.locals.error = req.flash('error');
     next();
 });
+
+
+// Passport Middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+
 
 // Routes
 app.use('/', require('./routes/index'));
 app.use('/auth', require('./routes/auth'));
 app.use('/profile', require('./routes/profile'));
-app.use('/watermeter', require('./routes/watermeter'));
+app.use('/admin', require('./routes/admin'));
+
+
 
 
 

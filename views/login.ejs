@@ -11,23 +11,45 @@
 </head>
 
 <body>
-    <header>
-        <h1>Login</h1>
-    </header>
-    <main>
-        <form action="/auth/login" method="POST">
-            <div>
-                <label for="email">Email:</label>
-                <input type="email" name="email" id="email" required>
-            </div>
-            <div>
-                <label for="password">Password:</label>
-                <input type="password" name="password" id="password" required>
-            </div>
-            <button type="submit">Login</button>
-        </form>
-        <p>Don't have an account? <a href="/register">Register here</a>.</p>
-    </main>
+
+    <% if (success_msg.length> 0) { %>
+        <div class="alert alert-success">
+            <%= success_msg %>
+        </div>
+        <% } %>
+
+            <% if (error_msg.length> 0) { %>
+                <div class="alert alert-danger">
+                    <%= error_msg %>
+                </div>
+                <% } %>
+
+                    <% if (error.length> 0) { %>
+                        <div class="alert alert-warning">
+                            <%= error %>
+                        </div>
+                        <% } %>
+
+
+                            <header>
+                                <h1>Login</h1>
+                            </header>
+                            <main>
+                                <form action="/auth/login" method="POST">
+                                    <div>
+                                        <label for="email">Email:</label>
+                                        <input type="email" name="email" id="email" required>
+                                    </div>
+                                    <div>
+                                        <label for="password">Password:</label>
+                                        <input type="password" name="password" id="password" required>
+                                    </div>
+                                    <button type="submit">Login</button>
+                                </form>
+                                <p>Don't have an account? <a href="/auth/register">Register here</a>.</p>
+                                <p><a href="/auth/forgot-password">Forgot your password?</a></p>
+
+                            </main>
 </body>
 
 </html>
